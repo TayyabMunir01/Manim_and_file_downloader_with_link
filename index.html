@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test file</title>
+</head>
+<body>
+    <h1>website</h1>
+    <button>Download file</button>
+    <a href="" style="display: none;" target="_blank" download=""></a>
+    <script >
+
+        document.querySelector('button').addEventListener('click', async function (){
+            async function f1(){
+                try{
+                    const data = await fetch('http://192.168.10.2:3000/download', {method:'POST'})
+                    console.log(data, typeof data)
+                    const response = await data.json()
+                    console.log(typeof response)
+                    console.log(typeof data,typeof response, response,response.length)
+
+                    const dataforblob = base64ToArrBuff(response.data)
+
+                    const blob1 = new Blob([dataforblob],{type:response.type})
+                    console.log(blob1)
+                    // objUrl = URL.createObjectURL(response)
+                    // document.querySelector('a').href = objUrl
+                    // document.querySelector('a').click()
+
+
+                    objUrl = URL.createObjectURL(blob1)
+                    document.querySelector('a').href = objUrl
+                    // document.querySelector('a').download = 'file.jpeg'
+                    document.querySelector('a').click()
+                }
+                catch (err){
+                    console.log(err)
+                }
+            }
+            console.log('working')
+            f1()
+        })
+
+
+        function base64ToArrBuff(base64) {
+    var binary_string =  atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++)        {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+    </script>
+</body>
+</html>
